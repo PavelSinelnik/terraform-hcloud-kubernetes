@@ -1,0 +1,54 @@
+---
+- name: Add Nvidia GPG apt Key
+  apt_key:
+    url: https://nvidia.github.io/nvidia-docker/gpgkey
+    state: present
+
+- name: Add Nvidia Repository
+  apt_repository:
+    repo: deb https://nvidia.github.io/libnvidia-container/stable/ubuntu18.04/$(ARCH) /
+    state: present
+    filename: nvidia-container-runtime
+
+- name: Add Nvidia Repository
+  apt_repository:
+    repo: deb https://nvidia.github.io/nvidia-container-runtime/stable/ubuntu18.04/$(ARCH) /
+    state: present
+    filename: nvidia-container-runtime
+
+- name: UnHold nvidia-container-runtime
+  command: >
+      apt-mark unhold nvidia-container-runtime
+  ignore_errors: True
+
+- name: Update apt and install nvidia-container-runtime
+  apt:
+    update_cache: yes
+    state: present
+    force: true
+    name: '{{ item }}'
+  loop: [ 'nvidia-container-runtime' ]
+
+- name: Hold nvidia-container-runtime
+  command: >
+      apt-mark hold nvidia-container-runtime
+  ignore_errors: True
+
+- name: UnHold nvidia-driver
+  command: >
+    apt-mark unhold nvidia-driver-*
+  ignore_errors: True
+
+- name: Update apt and install Kubernetes
+  apt:
+    update_cache: yes
+    state: present
+    force: true
+    install_recommends: no
+    name: '{{ item }}'
+  loop: [ 'nvidia-driver-{{ nvidia_driver_version }}' ]
+
+- name: Hold nvidia-driver
+  command: >
+    apt-mark hold nvidia-driver-{{ nvidia_driver_version }}
+  ignore_errors: True

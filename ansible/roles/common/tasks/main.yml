@@ -1,0 +1,19 @@
+---
+- name: Update and upgrade apt packages
+  apt:
+    upgrade: yes
+    update_cache: yes
+    cache_valid_time: 86400
+
+- name: Install required system packages
+  apt:
+    name: "{{ item }}"
+    state: latest
+    update_cache: yes
+  loop: [ 'nfs-common', 'cifs-utils', 'subversion', 'default-jre', 'git', 'git-lfs' ]
+
+- name: Change default target to multi-user.target
+  file:
+    src: /usr/lib/systemd/system/multi-user.target
+    dest: /etc/systemd/system/default.target
+    state: link

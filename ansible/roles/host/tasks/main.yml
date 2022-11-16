@@ -1,0 +1,14 @@
+---
+- name: Set a hostname
+  hostname:
+    name: '{{ worker_name }}'
+
+- name: Modify /etc/hosts
+  blockinfile:
+    state: present
+    insertafter: EOF
+    dest: /etc/hosts
+    content: |
+      116.202.5.200 control-palne-1
+
+      159.69.103.16 worker-1

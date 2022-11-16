@@ -1,0 +1,44 @@
+---
+- name: Create admin user
+  user:
+    name: admin
+    shell: /bin/bash
+    groups: [ 'sudo' ]
+    append: yes
+
+- name: Add authorized key
+  authorized_key:
+    user: admin
+    key: "{{ item }}"
+  with_file:
+    - ../pub_keys/admin_key.pub
+    - ../pub_keys/andrei.paulau_key.pub
+    - ../pub_keys/dzmitry.matsiuhin_key.pub
+    - ../pub_keys/dzmitry.vashkinel_key.pub
+    - ../pub_keys/auto_admin_key.pub
+
+- name: sudo without password for sudo group
+  copy:
+    content: '%sudo ALL=(ALL:ALL) NOPASSWD:ALL'
+    dest: /etc/sudoers.d/sudo_nopasswd
+    mode: '0440'
+
+- name: Create gitlab-runner user
+  user:
+    name: gitlab-runner
+    shell: /bin/bash
+    append: yes
+
+- name: Create dataset_tmp folder
+  file:
+    path: /home/gitlab-runner/dataset_tmp
+    state: directory
+    owner: gitlab-runner
+    group: gitlab-runner
+    mode: '0777'
+
+- name: Make gitlab-runner directory tree rwx
+  file:
+    path: /home/gitlab-runner
+    mode: 0777
+    recurse: yes

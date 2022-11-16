@@ -1,0 +1,141 @@
+---
+- name: Create /root/.repo_creds file
+  template:
+    src: .repo_creds
+    dest: /root/.repo_creds
+    mode: 0644
+    owner: root
+    group: root
+
+- name: Create dir for 'registry'
+  file:
+    path: /mnt/registry
+    state: directory
+    mode: '0755'
+
+- name: Set cifs mount share 'registry'
+  lineinfile:
+    state: present
+    create: yes
+    path: /etc/fstab
+    line: '//172.20.100.85/Repo/registry /mnt/registry cifs credentials=/root/.repo_creds,dir_mode=0777,file_mode=0777,iocharset=utf8  0       0'
+
+
+- name: Create /root/.creds file
+  template:
+    src: .creds
+    dest: /root/.creds
+    mode: 0644
+    owner: root
+    group: root
+
+- name: Create dir for 'face_data'
+  file:
+    path: /mnt/face_data
+    state: directory
+    mode: '0755'
+
+- name: Set cifs mount share face_data
+  lineinfile:
+    state: present
+    create: yes
+    path: /etc/fstab
+    line: '//172.20.100.14/face_data /mnt/face_data cifs credentials=/root/.creds,dir_mode=0777,file_mode=0777,iocharset=utf8  0       0'
+
+
+- name: Create dir for 'Programmers_tools'
+  file:
+    path: /mnt/Programmers_tools
+    state: directory
+    mode: '0755'
+
+- name: Set cifs mount share 'Programmers_tools'
+  lineinfile:
+    state: present
+    create: yes
+    path: /etc/fstab
+    line: '//172.20.100.14/Masters/Programmers_tools/  /mnt/Programmers_tools cifs credentials=/root/.creds,uid=1000,gid=1001,iocharset=utf8        0       0'
+
+
+- name: Create dir for 'autobuild'
+  file:
+    path: /mnt/autobuild
+    state: directory
+    mode: '0755'
+
+- name: Set cifs mount share 'autobuild'
+  lineinfile:
+    state: present
+    create: yes
+    path: /etc/fstab
+    line: '//172.20.100.98/work/software/autobuild /mnt/autobuild cifs credentials=/root/.creds,uid=1000,gid=1001,iocharset=utf8       0       0'
+
+
+- name: Create dir for 'mobile_sdk_db'
+  file:
+    path: /mnt/mobile_sdk_db
+    state: directory
+    mode: '0755'
+
+- name: Set cifs mount share 'mobile_sdk_db'
+  lineinfile:
+    state: present
+    create: yes
+    path: /etc/fstab
+    line: '//172.20.100.98/work/software/root/mobile_sdk_db /mnt/mobile_sdk_db cifs ro,credentials=/root/.creds,uid=1000,gid=1001,iocharset=utf8  0       0'
+
+
+- name: Create dir for 'share'
+  file:
+    path: /mnt/share
+    state: directory
+    mode: '0755'
+
+- name: Set cifs mount share 'share'
+  lineinfile:
+    state: present
+    create: yes
+    path: /etc/fstab
+    line: '//172.20.100.86/Share /mnt/share cifs credentials=/root/.creds,dir_mode=0777,file_mode=0777,iocharset=utf8  0       0'
+
+
+- name: Create dir for 'archive'
+  file:
+    path: /mnt/archive
+    state: directory
+    mode: '0755'
+
+- name: Set cifs mount share 'archive'
+  lineinfile:
+    state: present
+    create: yes
+    path: /etc/fstab
+    line: '//172.20.100.14/archive /mnt/archive cifs ro,credentials=/root/.creds,uid=1000,gid=1001,iocharset=utf8  0       0'
+
+
+- name: Create dir for 'countries_sample'
+  file:
+    path: /mnt/countries_sample
+    state: directory
+    mode: '0755'
+
+- name: Set cifs mount share 'countries_sample'
+  lineinfile:
+    state: present
+    create: yes
+    path: /etc/fstab
+    line: '//172.20.100.14/Imonlin/countries_sample /mnt/countries_sample cifs ro,credentials=/root/.creds,uid=1000,gid=1001,iocharset=utf8  0       0'
+
+
+- name: Create dir for 'new_samples'
+  file:
+    path: /mnt/new_samples
+    state: directory
+    mode: '0755'
+
+- name: Set cifs mount share 'new_samples'
+  lineinfile:
+    state: present
+    create: yes
+    path: /etc/fstab
+    line: '//172.20.100.14/New\040samples /mnt/new_samples cifs credentials=/root/.creds,dir_mode=0777,file_mode=0777,iocharset=utf8  0       0'

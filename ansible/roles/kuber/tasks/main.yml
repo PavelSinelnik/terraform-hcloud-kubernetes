@@ -1,0 +1,29 @@
+---
+- name: Add Kuber GPG apt Key
+  apt_key:
+    url: https://packages.cloud.google.com/apt/doc/apt-key.gpg
+    state: present
+
+- name: Add Kuber Repository
+  apt_repository:
+    repo: deb https://apt.kubernetes.io/ kubernetes-xenial main
+    state: present
+    filename: kubernetes
+
+- name: UnHold kubeadm
+  command: >
+    apt-mark unhold kubelet kubeadm kubectl
+  ignore_errors: True
+
+- name: Update apt and install Kubernetes
+  apt:
+    update_cache: yes
+    state: present
+    force: true
+    name: '{{ item }}'
+  loop: [ 'kubeadm={{ kube_version }}', 'kubectl={{ kube_version }}', 'kubelet={{ kube_version }}' ]
+
+- name: Hold kubeadm
+  command: >
+    apt-mark hold kubelet kubeadm kubectl
+  ignore_errors: True

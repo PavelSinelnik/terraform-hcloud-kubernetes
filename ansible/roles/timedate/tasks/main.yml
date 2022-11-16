@@ -1,0 +1,26 @@
+---
+- name: Install systemd-timesyncd
+  apt:
+    name: systemd-timesyncd
+    state: latest
+    update_cache: yes
+
+- name: Ensure timesynced enabled
+  service:
+    name: systemd-timesyncd
+    enabled: true
+    state: started
+
+- name:
+  command: >
+    timedatectl set-timezone Europe/Minsk
+  notify: restart systemd-timesyncd
+
+- name: copy NTP configs
+  template:
+    src: timesyncd.conf
+    dest: /etc/systemd/timesyncd.conf
+    mode: 0644
+    owner: root
+    group: root
+  notify: restart systemd-timesyncd

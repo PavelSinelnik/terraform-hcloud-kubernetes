@@ -1,0 +1,28 @@
+---
+- name: Load br_netfilter module
+  modprobe:
+    name: br_netfilter
+    state: present
+  register: br_netfilter
+
+- name: Enable net.ipv4.ip_forward in sysctl
+  sysctl:
+    name: net.ipv4.ip_forward
+    value: 1
+    sysctl_file: /etc/sysctl.d/ipv4-ip_forward.conf
+    state: present
+    reload: yes
+
+- name: Set bridge-nf-call-{arptables,iptables} to 1
+  sysctl:
+    name: "{{ item }}"
+    state: present
+    value: 1
+    sysctl_file: /etc/sysctl.d/99-kubernetes-cri.conf
+    reload: yes
+  with_items:
+    - net.bridge.bridge-nf-call-arptables
+    - net.bridge.bridge-nf-call-ip6tables
+    - net.bridge.bridge-nf-call-iptables
+    - net.ipv4.ip_forward
+  when: br_netfilter is defined

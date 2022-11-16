@@ -1,0 +1,22 @@
+---
+- hosts: all
+  become: true
+
+  pre_tasks:
+    - name: Update apt cache
+      apt: update_cache=true cache_valid_time=3600
+
+  roles:
+  - role: common
+
+  - role: host
+
+  - role: sysctl
+
+  - role: user
+
+  - role: timedate
+
+  - role: containerd
+
+  - role: kuber
